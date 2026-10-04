@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useCallback, type ReactNode } from "react"
 import Navigation20MobileAppIos from "./imports/Navigation20MobileAppIos/index"
-import SiteNav from "./SiteNav"
+import SiteNav, { SubNav } from "./SiteNav"
 import BottomNav from "./BottomNav"
+import SectionPage from "./SectionPages"
 
 // ─── SF Symbols as inline SVG (cross-platform, exact Figma geometry) ──────────
 
@@ -79,9 +80,53 @@ interface Article {
 
 const MAIN_TABS: TabConfig[] = [
   { id: "net-binnen", label: "Net binnen", pills: [] },
-  { id: "mijn-gemeente", label: "Mijn gemeente", pills: [] },
-  { id: "sport", label: "Sport", pills: [] },
-  { id: "showbizz", label: "Showbizz", pills: [] },
+  {
+    id: "mijn-gemeente",
+    label: "Mijn gemeente",
+    pills: [
+      { id: "alles", label: "Alles" },
+      { id: "verkeer", label: "Verkeer" },
+      { id: "wonen", label: "Wonen" },
+      { id: "cultuur", label: "Cultuur" },
+      { id: "gemeenteraad", label: "Gemeenteraad" },
+    ],
+  },
+  {
+    id: "sport",
+    label: "Sport",
+    pills: [
+      { id: "alles", label: "Alles" },
+      { id: "voetbal", label: "Voetbal" },
+      { id: "tennis", label: "Tennis" },
+      { id: "wielrennen", label: "Wielrennen" },
+      { id: "hockey", label: "Hockey" },
+      { id: "zwemmen", label: "Zwemmen" },
+      { id: "atletiek", label: "Atletiek" },
+    ],
+  },
+  {
+    id: "showbizz",
+    label: "Showbizz",
+    pills: [
+      { id: "alles", label: "Alles" },
+      { id: "film", label: "Film" },
+      { id: "muziek", label: "Muziek" },
+      { id: "televisie", label: "Televisie" },
+      { id: "royalty", label: "Royalty" },
+    ],
+  },
+  {
+    id: "misdaad",
+    label: "Misdaad",
+    pills: [
+      { id: "alles", label: "Alles" },
+      { id: "rechtbank", label: "Rechtbank" },
+      { id: "drugsgeweld", label: "Drugsgeweld" },
+      { id: "fraude", label: "Fraude" },
+      { id: "moord", label: "Moord" },
+      { id: "cybercrime", label: "Cybercrime" },
+    ],
+  },
 ]
 
 // ─── Content ─────────────────────────────────────────────────────────────────
@@ -114,6 +159,38 @@ const CONTENT: Record<string, Article[]> = {
     { label: "Televisie", title: "Nieuw seizoen van populair kookprogramma start met recordkijkcijfers", image: "photo-1556056504-5c7696c4c28d", excerpt: "Ruim 1,2 miljoen kijkers zagen de eerste aflevering, het beste resultaat in vijf jaar.", timeAgo: "2 uur geleden", premium: true },
     { label: "Royalty", title: "Prinses opent expositie en verrast met onaangekondigd bezoek aan kinderziekenhuis", image: "photo-1594810205183-18a8b0ce6c13", excerpt: "Na de opening bracht ze een uur door bij jonge patiënten. \"Dat was niet gepland, maar wel gewenst.\"", timeAgo: "4 uur geleden" },
     { label: "Celebrity", title: "Bekende presentator en partner verwachten tweede kindje", image: "photo-1572578906052-f7f3edbecc68", excerpt: "Het stel maakte het nieuws zelf bekend via sociale media en kreeg duizenden felicitaties.", timeAgo: "Gisteren" },
+  ],
+  "mijn-gemeente/verkeer": [
+    { label: "Verkeer", title: "Fietsstraat in het centrum gaat definitief open na maanden van werken", image: "photo-1627964718300-fab24a8a85ce", excerpt: "De nieuwe fietsstraat verbindt het station met de markt. Auto's zijn er nog slechts te gast, met een maximumsnelheid van 30 kilometer per uur.", timeAgo: "25 min geleden" },
+    { label: "Verkeer", title: "Werken aan de Stationsstraat: omleiding tot eind van de maand", image: "photo-1652294094412-7748207413fd", excerpt: "Het fietspad blijft open, autoverkeer wordt via de ring geleid.", timeAgo: "4 uur geleden" },
+  ],
+  "mijn-gemeente/wonen": [
+    { label: "Wonen", title: "Gemeente trekt 12 miljoen uit voor betaalbare woningen rond het station", image: "photo-1652294094412-7748207413fd", excerpt: "Het gemeentebestuur wil tegen 2028 tweehonderd nieuwe woningen bouwen, waarvan een derde sociaal.", timeAgo: "1 uur geleden", premium: true },
+    { label: "Wonen", title: "Nieuwe woonwijk aan de rand van het dorp krijgt groen licht", image: "photo-1594810459121-0dc1e2271b67", excerpt: "De eerste bewoners kunnen over twee jaar verhuizen. Een deel van de woningen is sociaal.", timeAgo: "Gisteren" },
+  ],
+  "mijn-gemeente/cultuur": [
+    { label: "Cultuur", title: "Buurtfeest op het kerkplein trekt duizenden bezoekers", image: "photo-1459679749680-18eb1eb37418", excerpt: "Van foodtrucks tot een optreden van de lokale harmonie: het jaarlijkse feest was opnieuw een succes.", timeAgo: "Gisteren" },
+    { label: "Cultuur", title: "Bibliotheek opent na verbouwing met leeshoek en makerslab", image: "photo-1536181783029-1097aaf179de", excerpt: "Naast boeken kunnen bezoekers er ook 3D-printers en naaimachines gebruiken.", timeAgo: "Gisteren" },
+  ],
+  "mijn-gemeente/gemeenteraad": [
+    { label: "Gemeenteraad", title: "Raad stemt in met nieuwe parkeerzones: bewoners betalen minder", image: "photo-1536181783029-1097aaf179de", excerpt: "Met 19 tegen 8 stemmen keurde de gemeenteraad het nieuwe parkeerplan goed. Het gaat in vanaf januari.", timeAgo: "Gisteren" },
+    { label: "Gemeenteraad", title: "Gemeenteraad bespreekt begroting: meer geld voor jeugdwerk", image: "photo-1719553946838-1190abdeee92", excerpt: "De oppositie vraagt om extra investeringen in sportaccommodaties.", timeAgo: "2 dagen geleden" },
+  ],
+  "showbizz/film": [
+    { label: "Film", title: "Debuutfilm 'De Stille Kracht' wint de Gouden Beer in Rotterdam", image: "photo-1771574203200-0ec88f162fe0", excerpt: "Regisseur Mila de Vries sleepte met haar eerste langspeelfilm de hoofdprijs in de wacht. \"Dit is voor iedereen die twijfelde.\"", timeAgo: "20 min geleden" },
+    { label: "Film", title: "Nieuwe thriller opent met recordweekend in de bioscoop", image: "photo-1693517343607-e7dced201648", excerpt: "Meer dan driehonderdduizend bezoekers zagen de film in de eerste drie dagen.", timeAgo: "3 uur geleden" },
+  ],
+  "showbizz/muziek": [
+    { label: "Muziek", title: "Zangeres kondigt verrassingstournee aan: tickets binnen een uur uitverkocht", image: "photo-1693517343607-e7dced201648", excerpt: "Voor de zomer staan er twaalf concerten gepland. Fans klaagden over problemen met de ticketsite.", timeAgo: "1 uur geleden" },
+    { label: "Muziek", title: "Festival maakt eerste namen bekend: drie dagen, zestig optredens", image: "photo-1459679749680-18eb1eb37418", excerpt: "Tickets gaan vrijdag in de voorverkoop.", timeAgo: "5 uur geleden" },
+  ],
+  "showbizz/televisie": [
+    { label: "Televisie", title: "Nieuw seizoen van populair kookprogramma start met recordkijkcijfers", image: "photo-1556056504-5c7696c4c28d", excerpt: "Ruim 1,2 miljoen kijkers zagen de eerste aflevering, het beste resultaat in vijf jaar.", timeAgo: "2 uur geleden", premium: true },
+    { label: "Televisie", title: "Talentenjacht keert terug met nieuwe jury", image: "photo-1572578906052-f7f3edbecc68", excerpt: "Twee bekende gezichten verlaten het panel, drie nieuwe namen nemen hun plaats in.", timeAgo: "Gisteren" },
+  ],
+  "showbizz/royalty": [
+    { label: "Royalty", title: "Prinses opent expositie en verrast met onaangekondigd bezoek aan kinderziekenhuis", image: "photo-1594810205183-18a8b0ce6c13", excerpt: "Na de opening bracht ze een uur door bij jonge patiënten. \"Dat was niet gepland, maar wel gewenst.\"", timeAgo: "4 uur geleden" },
+    { label: "Royalty", title: "Koninklijk paar viert jubileum met openbare wandeling", image: "photo-1486299267070-83823f5448dd", excerpt: "Duizenden mensen verzamelden zich langs de route om hen te begroeten.", timeAgo: "Gisteren" },
   ],
   "sport/alles": [
     { label: "Voetbal", title: "Ajax wint spectaculaire topper van PSV met 3-2 na rode kaart keeper", image: "photo-1679391029864-d46f366a456b", excerpt: "In de 82e minuut greep de PSV-doelman in na een uitbraak van Brobbey. Ajax profiteerde van het numerieke overwicht.", timeAgo: "35 min geleden" },
@@ -266,6 +343,12 @@ const CONTENT: Record<string, Article[]> = {
   "misdaad/rechtbank": [
     { label: "Rechtbank", title: "Uitspraak in zaak-Taghi: levenslang voor leider criminele organisatie", image: "photo-1658958327132-a80f8a9409fb", excerpt: "De rechtbank Amsterdam deed na drie jaar strafproces uitspraak.", timeAgo: "2 uur geleden", premium: true },
     { label: "Rechtbank", title: "Kroongetuige Nabil B. getuigt: 'Taghi belde zelf met de opdracht'", image: "photo-1780396209853-a771d772e56d", excerpt: "Op de zitting van gisteren gaf de kroongetuige gedetailleerde verklaringen.", timeAgo: "Gisteren" },
+  ],
+  "misdaad/drugsgeweld": [
+    { label: "Liquidatie", title: "Schietpartij in Antwerpen-Noord: tweede dode in een week in drugsmilieu", image: "photo-1598449935381-54511437c927", excerpt: "De politie sluit een afrekening niet uit. Buurtbewoners spreken van een gevoel van onveiligheid.", timeAgo: "1 uur geleden" },
+    { label: "Explosies", title: "Derde explosie in een maand tijd: woning beschadigd bij nachtelijke aanslag", image: "photo-1718592168437-8382e5b97736", excerpt: "Niemand raakte gewond. Het gerecht onderzoekt een mogelijk verband met een conflict tussen drugsbendes.", timeAgo: "3 uur geleden" },
+    { label: "Onderwereld", title: "Jonge rekruten voor drugsbendes: 'Ze beginnen als koerier, op hun vijftiende'", image: "photo-1621697944804-d0a393f7e01a", excerpt: "Hulpverleners en politie slaan alarm over het dalende instapniveau in de georganiseerde misdaad.", timeAgo: "5 uur geleden", premium: true },
+    { label: "Beleid", title: "Minister kondigt extra maatregelen aan tegen drugsgeweld in de havenstad", image: "photo-1640958900081-7b069dd23e9c", excerpt: "Er komen extra rechercheurs en meer camera's. Critici vinden dat het plan te laat komt.", timeAgo: "Gisteren" },
   ],
   "misdaad/drugs": [
     { label: "Cocaine", title: "Recordvangst: 10 ton cocaine gevonden in scheepslading bananen in Antwerpen", image: "photo-1640958900081-7b069dd23e9c", excerpt: "De straatwaarde wordt geschat op meer dan een miljard euro.", timeAgo: "1 uur geleden" },
@@ -638,17 +721,11 @@ export default function App() {
   const [selectedSubmenu, setSelectedSubmenu] = useState<Record<string, Record<string, string>>>({})
   const [openMenuPillId, setOpenMenuPillId] = useState<string | null>(null)
   const [openTabMenuId, setOpenTabMenuId] = useState<string | null>(null)
-
-  const swipeStartX = useRef<number | null>(null)
-  const swipeStartY = useRef<number | null>(null)
-  const swipeDir = useRef<"h" | "v" | null>(null)
-  const [dragOffsetX, setDragOffsetX] = useState(0)
-  const [isDragging, setIsDragging] = useState(false)
+  const [activeNavId, setActiveNavId] = useState("home")
 
   const tabRefs = useRef<(HTMLElement | null)[]>([])
   const pillRowRef = useRef<HTMLDivElement>(null)
   const tabRowRef = useRef<HTMLDivElement>(null)
-  const viewportRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const headerTranslate = useRef(0)
   const panelScrollTop = useRef(0)
@@ -680,16 +757,6 @@ export default function App() {
     pillRowRef.current?.scrollTo({ left: 0, behavior: "smooth" })
   }, [activeTabIdx])
 
-  // Document-level non-passive touchmove listener: once a horizontal swipe is
-  // detected, preventDefault stops vertical drift on any scroll container in the tree.
-  useEffect(() => {
-    const handler = (e: TouchEvent) => {
-      if (swipeDir.current === "h") e.preventDefault()
-    }
-    document.addEventListener("touchmove", handler, { passive: false })
-    return () => document.removeEventListener("touchmove", handler)
-  }, [])
-
   function goToTab(idx: number) {
     setOpenTabMenuId(null)
     if (idx === activeTabIdx) return
@@ -706,6 +773,12 @@ export default function App() {
   function selectPill(tabId: string, pillId: string) {
     setActivePills(prev => ({ ...prev, [tabId]: pillId }))
     setOpenMenuPillId(null)
+    panelScrollTop.current = 0
+    headerTranslate.current = 0
+    if (headerRef.current) {
+      headerRef.current.style.transform = "translateY(0)"
+      headerRef.current.style.marginBottom = "0"
+    }
     if (activePills[tabId] !== pillId) {
       setSelectedSubmenu(prev => ({
         ...prev,
@@ -728,60 +801,6 @@ export default function App() {
     })
   }
 
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    swipeStartX.current = e.touches[0].clientX
-    swipeStartY.current = e.touches[0].clientY
-    swipeDir.current = null
-    setIsDragging(true)
-  }, [])
-
-  const onTouchMove = useCallback((e: React.TouchEvent) => {
-    if (swipeStartX.current === null) return
-    const dx = e.touches[0].clientX - swipeStartX.current
-    const dy = e.touches[0].clientY - (swipeStartY.current ?? 0)
-    if (!swipeDir.current && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
-      swipeDir.current = Math.abs(dx) > Math.abs(dy) ? "h" : "v"
-    }
-    if (swipeDir.current === "h") setDragOffsetX(dx)
-  }, [])
-
-  const onTouchEnd = useCallback(() => {
-    if (swipeDir.current === "h") {
-      const threshold = 55
-      if (dragOffsetX < -threshold && activeTabIdx < MAIN_TABS.length - 1) {
-        setActiveTabIdx(i => i + 1); setOpenMenuPillId(null); setOpenTabMenuId(null)
-      } else if (dragOffsetX > threshold && activeTabIdx > 0) {
-        setActiveTabIdx(i => i - 1); setOpenMenuPillId(null); setOpenTabMenuId(null)
-      }
-    }
-    swipeStartX.current = null; swipeStartY.current = null; swipeDir.current = null
-    setDragOffsetX(0); setIsDragging(false)
-  }, [dragOffsetX, activeTabIdx])
-
-  const onMouseDown = useCallback((e: React.MouseEvent) => {
-    swipeStartX.current = e.clientX; swipeDir.current = "h"; setIsDragging(true)
-  }, [])
-
-  const onMouseMove = useCallback((e: React.MouseEvent) => {
-    if (swipeStartX.current === null) return
-    setDragOffsetX(e.clientX - swipeStartX.current)
-  }, [])
-
-  const onMouseUp = useCallback(() => {
-    const threshold = 55
-    if (dragOffsetX < -threshold && activeTabIdx < MAIN_TABS.length - 1) {
-      setActiveTabIdx(i => i + 1); setOpenMenuPillId(null); setOpenTabMenuId(null)
-    } else if (dragOffsetX > threshold && activeTabIdx > 0) {
-      setActiveTabIdx(i => i - 1); setOpenMenuPillId(null); setOpenTabMenuId(null)
-    }
-    swipeStartX.current = null; swipeDir.current = null
-    setDragOffsetX(0); setIsDragging(false)
-  }, [dragOffsetX, activeTabIdx])
-
-  const vpWidth = viewportRef.current?.offsetWidth ?? 390
-  const dragPct = isDragging && swipeDir.current === "h" ? (dragOffsetX / vpWidth) * (100 / MAIN_TABS.length) : 0
-  const translatePct = (activeTabIdx / MAIN_TABS.length) * 100 - dragPct
-
   function getSubmenuLabel(tabId: string, pillId: string): string | undefined {
     const id = selectedSubmenu[tabId]?.[pillId]
     if (!id) return undefined
@@ -794,6 +813,9 @@ export default function App() {
 
   return (
     <div style={{ background: "white", height: "100%", width: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+
+      {/* Home view stays mounted (hidden) while another bottom-nav section is open, so its state survives */}
+      <div style={{ flex: 1, minHeight: 0, display: activeNavId === "home" ? "flex" : "none", flexDirection: "column" }}>
 
       {/* ── Header — translates up with scroll, comes back on scroll-up ── */}
       <div
@@ -808,71 +830,47 @@ export default function App() {
         onSelect={id => goToTab(MAIN_TABS.findIndex(t => t.id === id))}
       />
 
-      {/* ── Swipeable Content Carousel ── */}
-      <div
-        ref={viewportRef}
-        style={{ flex: 1, overflow: "hidden", position: "relative" }}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseUp}
-      >
-        <div
-          style={{
-            display: "flex",
-            height: "100%",
-            width: `${MAIN_TABS.length * 100}%`,
-            transform: `translateX(-${translatePct}%)`,
-            transition: isDragging ? "none" : "transform 0.32s cubic-bezier(0.25,0.46,0.45,0.94)",
-            willChange: "transform",
-          }}
-        >
-          {MAIN_TABS.map((tab, tabIdx) => {
-            const panelPillId = activePills[tab.id] ?? tab.pills[0]?.id
-            const panelSubmenuId = panelPillId ? selectedSubmenu[tab.id]?.[panelPillId] : undefined
-            const panelKey = getContentKey(tab.id, panelPillId, panelSubmenuId)
-            const panelArticles = CONTENT[panelKey] ?? CONTENT[tab.id] ?? []
+      {activeTab.pills.length > 0 && (
+        <SubNav
+          items={activeTab.pills}
+          activeId={activePillId ?? ""}
+          onSelect={pillId => selectPill(activeTab.id, pillId)}
+        />
+      )}
 
-            const panelPill = tab.pills.find(p => p.id === panelPillId)
-            const panelSubmenuLabel = panelSubmenuId
-              ? panelPill?.submenu?.find(s => s.id === panelSubmenuId)?.label
-              : undefined
-            const pageTitle = panelSubmenuLabel
-              ? panelSubmenuLabel
-              : panelPillId && panelPillId !== "alles"
-                ? (panelPill?.label ?? tab.label)
-                : tab.label
+      {/* ── Content: only the active tab's page, no horizontal swipe between pages ── */}
+      {(() => {
+        const tab = activeTab
+        const pillId = activePillId
+        const panelPill = tab.pills.find(p => p.id === pillId)
+        const pageTitle = pillId && pillId !== "alles" ? (panelPill?.label ?? tab.label) : tab.label
+        return (
+          <div
+            key={`${tab.id}/${pillId ?? ""}`}
+            style={{ flex: 1, overflowY: "auto" }}
+            onScroll={handleContentScroll}
+          >
+            <div style={{ padding: "16px 16px 12px" }}>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2, margin: 0 }}>{pageTitle}</h1>
+              <p style={{ fontSize: 13, color: "#aaa", margin: "4px 0 0" }}>
+                {articles.length} artikel{articles.length !== 1 ? "en" : ""}
+              </p>
+            </div>
 
-            return (
-              <div
-                key={tab.id}
-                style={{ width: `${100 / MAIN_TABS.length}%`, height: "100%", overflowY: "auto" }}
-                onScroll={tabIdx === activeTabIdx ? handleContentScroll : undefined}
-              >
-                <div style={{ padding: "16px 16px 12px" }}>
-                  <h1 style={{ fontSize: 22, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2, margin: 0 }}>
-                    {tabIdx === activeTabIdx ? pageTitle : tab.label}
-                  </h1>
-                  <p style={{ fontSize: 13, color: "#aaa", margin: "4px 0 0" }}>
-                    {panelArticles.length} artikel{panelArticles.length !== 1 ? "en" : ""}
-                  </p>
-                </div>
+            {articles.map((article, i) => (
+              <ArticleTeaser key={i} article={article} index={i} />
+            ))}
 
-                {panelArticles.map((article, i) => (
-                  <ArticleTeaser key={i} article={article} index={i} />
-                ))}
+            <div style={{ height: 32 }} />
+          </div>
+        )
+      })()}
 
-                <div style={{ height: 32 }} />
-              </div>
-            )
-          })}
-        </div>
       </div>
 
-      <BottomNav />
+      {activeNavId !== "home" && <SectionPage id={activeNavId} header={<Navigation20MobileAppIos />} />}
+
+      <BottomNav activeId={activeNavId} onSelect={setActiveNavId} />
     </div>
   )
 }
